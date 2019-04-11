@@ -4,14 +4,19 @@ import rootReducer from "./reducers";
 
 const initialState = {};
 const middleware = [thunk];
-const store = createStore(
-  rootReducer,
-  initialState,
-  compose(
-    applyMiddleware(...middleware),
-    (window as any).__REDUX_DEVTOOLS_EXTENSION__ /* tslint:disable-line */ &&
-      (window as any).__REDUX_DEVTOOLS_EXTENSION__() /* tslint:disable-line */
-  )
-);
+const reduxDevtoolsExtension =
+  (window as any) /* tslint:disable-line */
+    .__REDUX_DEVTOOLS_EXTENSION__ /* tslint:disable-next-line */ &&
+  (window as any).__REDUX_DEVTOOLS_EXTENSION__();
+const store = reduxDevtoolsExtension
+  ? createStore(
+      rootReducer,
+      initialState,
+      compose(
+        applyMiddleware(...middleware),
+        reduxDevtoolsExtension
+      )
+    )
+  : createStore(rootReducer, initialState, applyMiddleware(...middleware));
 
 export default store;

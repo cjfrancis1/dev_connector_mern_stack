@@ -8,6 +8,7 @@ import profile from "./routes/api/profile";
 import posts from "./routes/api/posts";
 import passportConfig from "./config/passport";
 
+const path = require("path");
 const mongoUri = require("./config/keys").mongoUri;
 
 // Create Express server
@@ -22,7 +23,7 @@ mongoose
 // Add headers
 app.use(function(req, res, next) {
   // Website you wish to allow to connect
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Origin", "*");
 
   // Request methods you wish to allow
   res.setHeader(
@@ -54,5 +55,15 @@ passportConfig(passport);
 app.use("/api/users", users);
 app.use("/api/profile", profile);
 app.use("/api/posts", posts);
+
+// Serve static assets if in production
+if (process.env.NODE_ENV === "production") {
+  // Set static folder
+  app.use(express.static("client/dist"));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "/app/client/dist/index.html"));
+  });
+}
 
 export default app;
