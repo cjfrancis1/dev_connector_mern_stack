@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import jwt_decode from "jwt-decode";
 
 import "jquery";
-import "popper.js";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 import store from "../store";
 import setAuthToken from "../utils/setAuthToken";
